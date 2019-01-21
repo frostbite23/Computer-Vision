@@ -6,7 +6,7 @@ Author: Pramith Devulapalli
 The Discrete Cosine Transform (DCT) is a version of the Discrete Fourier Transform (DFT) that aims to represent an arbitrary signal in terms of purely cosine functions. Through the application of the DCT, the spectral representation of the image can be acquired and the underlying frequencies in the image can be analyzed. 
 
 The concept of the DCT lies in its basis functions. The 1-D DCT
-<p align="center"><img alt="$$ \mathbf{ X_k = \sum_{n=0}^{N-1} x_n cos[\frac{\pi}{N} (n + \frac{1}{2}) k]} $$" src="svgs/e990d4205294fa5798b9a2d54e4b2a54.svg" align="middle" width="242.0452088pt" height="53.413903000000005pt"/></p> where <p align="center"><img alt="$$ \mathbf{ k = 0, \ldots, N-1} $$" src="svgs/20597d4666fbb7e2fd63f24e64e0b0d0.svg" align="middle" width="137.02760930000002pt" height="16.3830154pt"/></p>
+<p align="center"><img alt="$$ X_k = \sum_{n=0}^{N-1} x_n cos[\frac{\pi}{N} (n + \frac{1}{2}) k] $$" src="svgs/17ecf3d09b4ee9c152779f3866b8dcdc.svg" align="middle" width="252.15488pt" height="57.706026pt"/></p> where <p align="center"><img alt="$$ k = 0, \ldots, N-1$$" src="svgs/7bbefffecadf4b3a72f9d5a1e52513ce.svg" align="middle" width="144.305438pt" height="17.711368pt"/></p>
 constructs an arbitrary signal through cosines of k varying frequencies.
 
 The DCT is used in computer vision for a different number of reasons. The first (0th) coefficient of the DCT is the mean of the values being transformed. This is crucial because the first coefficient represents the average tone of the image pixels and represents important information (a DST doesn't have this property). Additionally, the boundary conditions implied by the DCT differ from the DFT. The DFT implies a periodic extension of the signal whereas the DCT implies an even extension of the signal (symmetric). In imaging applications, the DCT is more conducive than the DFT because the DCT is able to represent most of the signal information in a smaller amount of terms than that of the DFT.  
@@ -49,7 +49,7 @@ plt.imshow(img2, cmap='gray')
 ![png](images/DCToutput_6_1.png)
 
 
-A naive implementation of the 2-D DCT requires four for loops and has a run time complexity of <p align="center"><img alt="$$O(N^4)$$" src="svgs/8e59a38a22630aad0fdf0b111685fa85.svg" align="middle" width="53.992290700000005pt" height="20.532065900000003pt"/></p> and this can be computationally very expensive when the size of the images scale upwards. Ideally, implementing an algorithm with a much better time complexity is preferred to effectively compute the 2-D DCT in a much shorter time. Below, I have performed the naive implementation of the 2-D DCT to see the different basis functions of the discrete cosine transform.
+A naive implementation of the 2-D DCT requires four for loops and has a run time complexity of <p align="center"><img alt="$$O(N^4)$$" src="svgs/8e59a38a22630aad0fdf0b111685fa85.svg" align="middle" width="58.370044pt" height="22.196828pt"/></p> and this can be computationally very expensive when the size of the images scale upwards. Ideally, implementing an algorithm with a much better time complexity is preferred to effectively compute the 2-D DCT in a much shorter time. Below, I have performed the naive implementation of the 2-D DCT to see the different basis functions of the discrete cosine transform.
 
 
 ```python
@@ -96,7 +96,7 @@ plt.show()
 
 ## Optimization of the Discrete Cosine Transform
 
-The naive implementation is too computationally expensive and impractical to perform on large images. For example, if I had a 512x512 image, the naive implementation would execute 68,719,476,736 operations to complete the DCT. 
+The naive implementation is too computationally expensive and impractical to perform on large images. For example, if I had a 512x512 image, the naive implementation would execute approximately 68,719,476,736 operations to complete the DCT. 
 
 ### How can we optimize the DCT?
 
@@ -105,58 +105,58 @@ I decided to choose the latter option because there were more resources and info
 
 ### Fast Fourier Transform Algorithm
 
-The FFT is an algorithm that computes the discrete Fourier Transform in <p align="center"><img alt="$$\mathcal{O}[N\log N]$$" src="svgs/8dc30e429ec0959a7a5e0dfd4c359bd3.svg" align="middle" width="89.0108482pt" height="18.430884000000002pt"/></p> versus a naive implementation that runs in <p align="center"><img alt="$$\mathcal{O}[N^2]$$" src="svgs/635dce54d0d10af5f28401f9537eb4b9.svg" align="middle" width="50.510960700000005pt" height="20.532065900000003pt"/></p>.
+The FFT is an algorithm that computes the discrete Fourier Transform in <p align="center"><img alt="$$\mathcal{O}[N\log N]$$" src="svgs/8dc30e429ec0959a7a5e0dfd4c359bd3.svg" align="middle" width="96.227944pt" height="19.92528pt"/></p> versus a naive implementation that runs in <p align="center"><img alt="$$\mathcal{O}[N^2]$$" src="svgs/635dce54d0d10af5f28401f9537eb4b9.svg" align="middle" width="54.606444pt" height="22.196828pt"/></p>.
 
 #### Discrete Fourier Transform
-<p align="center"><img alt="$$ \mathbf{ X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N}} $$" src="svgs/cf8510af431168d9370d4dc5e947f734.svg" align="middle" width="233.5052832pt" height="53.413903000000005pt"/></p>
+<p align="center"><img alt="$$ X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N} $$" src="svgs/f1dd5332a00ecdecde8446a5ea45f672.svg" align="middle" width="246.610616pt" height="57.706026pt"/></p>
 
 
 #### Inverse Discrete Fourier Transform
-<p align="center"><img alt="$$ \mathbf{ x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k e^{i~2\pi~k~n~/~N}} $$" src="svgs/f642eacb4a2863721a629bb879e2baad.svg" align="middle" width="232.75776665pt" height="54.0589684pt"/></p>
+<p align="center"><img alt="$$ x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k e^{i~2\pi~k~n~/~N} $$" src="svgs/6764f799c1b8d3c8a53b5bfe9acb39ec.svg" align="middle" width="246.051588pt" height="58.403394pt"/></p>
 
 
 The FFT derives its fast time complexity by exploiting the symmetries apparent in the DFT. The algorithm described below to implement the FFT is called the radix-2 decimation-in-time (DIT).
 
 First, we can observe that the DFT can be split into two different summations. 
 
-<p align="center"><img alt="$$ \mathbf{&#10;\begin{align}&#10;X_k &amp;= \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N} \\&#10;    &amp;= \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~(2m)~/~N} + \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~(2m + 1)~/~N} \\&#10;    &amp;= \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~m~/~(N/2)} + e^{-i~2\pi~k~/~N} \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~m~/~(N/2)}&#10;\end{align}}&#10;$$" src="svgs/05955ea126823b3174a6255d5f73c6e1.svg" align="middle" width="656.9304564000001pt" height="187.1457521pt"/></p>
+<p align="center"><img alt="$$&#10;\begin{align}&#10;X_k &amp;= \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N} \\&#10;    &amp;= \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~(2m)~/~N} + \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~(2m + 1)~/~N} \\&#10;    &amp;= \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~m~/~(N/2)} + e^{-i~2\pi~k~/~N} \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~m~/~(N/2)}&#10;\end{align}&#10;$$" src="svgs/142e377deb8ccb19b9423aa7aa919b69.svg" align="middle" width="710.195088pt" height="202.319732pt"/></p>
 
 
-Observing the second step, the summation on the left is concerned with even numbered inputs whereas the the summation on the right is concerned with odd numbered inputs. To account for even and odd numbered inputs, the expressions <p align="center"><img alt="$$2m$$" src="svgs/70432f1cdc338828692756fae17d925e.svg" align="middle" width="25.398045050000004pt" height="11.8776808pt"/></p> and <p align="center"><img alt="$$2m+1$$" src="svgs/900d1aa1405d9b87366a67f53e886bbe.svg" align="middle" width="57.14000835pt" height="13.41360075pt"/></p> are used respectively. 
+Observing the second step, the summation on the left is concerned with even numbered inputs whereas the the summation on the right is concerned with odd numbered inputs. To account for even and odd numbered inputs, the expressions <p align="center"><img alt="$$2m$$" src="svgs/70432f1cdc338828692756fae17d925e.svg" align="middle" width="27.457346pt" height="12.840736pt"/></p> and <p align="center"><img alt="$$2m+1$$" src="svgs/900d1aa1405d9b87366a67f53e886bbe.svg" align="middle" width="61.772982pt" height="14.50119pt"/></p> are used respectively. 
 
-The third step is crucial to the radix-2 DIT algorithm. Focusing on the summation for even-numbered inputs, one can observe that the <p align="center"><img alt="$$2$$" src="svgs/fa950582c899ab6c9aa5a2411f073e56.svg" align="middle" width="9.21547715pt" height="11.8776808pt"/></p> in <p align="center"><img alt="$$2m$$" src="svgs/70432f1cdc338828692756fae17d925e.svg" align="middle" width="25.398045050000004pt" height="11.8776808pt"/></p> can be rewritten into the <p align="center"><img alt="$$N$$" src="svgs/d546e0ee5a0604ca911ec7acb79e5a97.svg" align="middle" width="16.81817055pt" height="12.59442075pt"/></p> as <p align="center"><img alt="$$N/2$$" src="svgs/58ba38ad25033eb4191ce7613d2d7aee.svg" align="middle" width="33.713175299999996pt" height="18.430884000000002pt"/></p>. This equivalent to the even-numbered summation in the second step and now the even-numbered summation in the third step is now the DFT of only half the input. 
+The third step is crucial to the radix-2 DIT algorithm. Focusing on the summation for even-numbered inputs, one can observe that the <p align="center"><img alt="$$2$$" src="svgs/fa950582c899ab6c9aa5a2411f073e56.svg" align="middle" width="9.962678pt" height="12.840736pt"/></p> in <p align="center"><img alt="$$2m$$" src="svgs/70432f1cdc338828692756fae17d925e.svg" align="middle" width="27.457346pt" height="12.840736pt"/></p> can be rewritten into the <p align="center"><img alt="$$N$$" src="svgs/d546e0ee5a0604ca911ec7acb79e5a97.svg" align="middle" width="18.181806pt" height="13.61559pt"/></p> as <p align="center"><img alt="$$N/2$$" src="svgs/58ba38ad25033eb4191ce7613d2d7aee.svg" align="middle" width="36.446676pt" height="19.92528pt"/></p>. This equivalent to the even-numbered summation in the second step and now the even-numbered summation in the third step is now the DFT of only half the input. 
 
-Looking at the odd-numbered summation, we can factor out a <p align="center"><img alt="$$e^{-i~2\pi~k~n~/~N}$$" src="svgs/009e0ac8a697b9c22e0b60b885005045.svg" align="middle" width="110.32973020000001pt" height="17.286181700000004pt"/></p> out of the summation because it has no dependency on m. We can perform the same mathematical trick for the even-numbered summation to the odd-numbered summation and now we get a DFT for the odd-numbered inputs. 
+Looking at the odd-numbered summation, we can factor out a <p align="center"><img alt="$$e^{-i~2\pi~k~n~/~N}$$" src="svgs/009e0ac8a697b9c22e0b60b885005045.svg" align="middle" width="119.275384pt" height="18.687764pt"/></p> out of the summation because it has no dependency on m. We can perform the same mathematical trick for the even-numbered summation to the odd-numbered summation and now we get a DFT for the odd-numbered inputs. 
 
 #### Why is segregating the DFT into even and odd-numbered inputs powerful?
 
-After the third step, one can see that the original DFT has been halved into two smaller N/2 DFTs. This can be repeated by segregating the even-indexed inputs from the odd-numbered inputs until the halved DFTs has only one number. The DFT of one input and is simply the input itself. Assuming that the input array to the FFT is <p align="center"><img alt="$$2^n$$" src="svgs/5066e128c87d276fa3b5a18fa95d2e05.svg" align="middle" width="18.3264737pt" height="13.16482755pt"/></p>, one can observe that the number of stages of dividing the DFT occurs <p align="center"><img alt="$$log(2^N)$$" src="svgs/3ef01afce3f249fbe5a666d42884c1b3.svg" align="middle" width="61.778169250000005pt" height="21.0338081pt"/></p> (assuming log base 2) or N times.
+After the third step, one can see that the original DFT has been halved into two smaller N/2 DFTs. This can be repeated by segregating the even-indexed inputs from the odd-numbered inputs until the halved DFTs has only one number. The DFT of one input and is simply the input itself. Assuming that the input array to the FFT is <p align="center"><img alt="$$2^n$$" src="svgs/5066e128c87d276fa3b5a18fa95d2e05.svg" align="middle" width="19.812404pt" height="14.232246pt"/></p>, one can observe that the number of stages of dividing the DFT occurs <p align="center"><img alt="$$log(2^N)$$" src="svgs/3ef01afce3f249fbe5a666d42884c1b3.svg" align="middle" width="66.78721pt" height="22.739252pt"/></p> (assuming log base 2) or N times.
 
-After dividing the DFT N times, now the divisions have to rejoin each other to resemble the DFT of the original signal. After the third step from the above expressions, one can notice that the original DFT can be summarized through <img alt="$E_k$" src="svgs/05bf2b668cae2b5ab9a4c170036b069b.svg" align="middle" width="21.75235549999999pt" height="37.783262250000035pt"/> (even-numbered DFT) and <img alt="$O_k$" src="svgs/d558846fb5620bb03a65a3cc2524dfed.svg" align="middle" width="22.20540384999999pt" height="37.783262250000035pt"/> (odd-numbered DFT):
-<p align="center"><img alt="$$ \mathbf{ X_k = E_k + e^{-\frac{2\pi i}{N}k} O_k} $$" src="svgs/3ab5bbdfe6812664df383f4455670945.svg" align="middle" width="175.62563745pt" height="21.7271585pt"/></p>
+After dividing the DFT N times, now the divisions have to rejoin each other to resemble the DFT of the original signal. After the third step from the above expressions, one can notice that the original DFT can be summarized through <img alt="$E_k$" src="svgs/05bf2b668cae2b5ab9a4c170036b069b.svg" align="middle" width="23.51605999999999pt" height="40.846770000000035pt"/> (even-numbered DFT) and <img alt="$O_k$" src="svgs/d558846fb5620bb03a65a3cc2524dfed.svg" align="middle" width="24.005841999999987pt" height="40.846770000000035pt"/> (odd-numbered DFT):
+<p align="center"><img alt="$$ X_k = E_k + e^{-\frac{2\pi i}{N}k} O_k $$" src="svgs/f4c461b03b76f9f13764601bb3b5ffea.svg" align="middle" width="182.79962pt" height="23.210086pt"/></p>
 where
-<p align="center"><img alt="$$ \mathbf{ E_k = \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~m~/~(N/2)}} $$" src="svgs/220d819cd999fc0baaac3deecd2a204e.svg" align="middle" width="292.24355095pt" height="55.8253077pt"/></p> and
-<p align="center"><img alt="$$ \mathbf{ O_k = \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~m~/~(N/2)}} $$" src="svgs/ee08494fb57ea4734f21b9e2e61ecf3e.svg" align="middle" width="313.90498265pt" height="55.8253077pt"/></p>
+<p align="center"><img alt="$$ E_k = \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~m~/~(N/2)} $$" src="svgs/6d08ae86b3e244ff35ee32e8a28f2874.svg" align="middle" width="303.425534pt" height="60.351684pt"/></p> and
+<p align="center"><img alt="$$ O_k = \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~m~/~(N/2)} $$" src="svgs/3ac19f1ae22322dbb683c4e08f9c31fd.svg" align="middle" width="324.089754pt" height="60.351684pt"/></p>
 
-Remember, the DFT can only calculate the spectral representation of a 1-d signal for frequencies from 0 to the length of the signal. In the case above, <img alt="$X_k$" src="svgs/1a35cf75b6c416e1e4a2b594e79040e6.svg" align="middle" width="23.41626954999999pt" height="37.783262250000035pt"/> can technically only be calculate for value of k from <img alt="$0 \leq k &lt; N/2$" src="svgs/2ffae1dd88d14dd9d44df39b4e068419.svg" align="middle" width="102.2526857pt" height="41.469488999999975pt"/>. 
+Remember, the DFT can only calculate the spectral representation of a 1-d signal for frequencies from 0 to the length of the signal. In the case above, <p align="center"><img alt="$$X_k$$" src="svgs/7624e0a73dbed7225b01557dc2a5314b.svg" align="middle" width="25.314886pt" height="16.604352pt"/></p> can technically only be calculate for value of k from <p align="center"><img alt="$$0 \leq k &lt; N/2$$" src="svgs/324149020872ecb9cc7239b6e34a5450.svg" align="middle" width="110.543444pt" height="19.92528pt"/></p>. 
 
 How do we calculate for values of k from N/2 to N?
 
-We can exploit the symmetry of the DFT. One can notice that <img alt="$X_{N+k}$" src="svgs/feef57d505dce7231d390a6e738ecf88.svg" align="middle" width="47.78863204999999pt" height="37.783262250000035pt"/> is equivalent to <img alt="$X_N$" src="svgs/5fb087acbabfea9741285baec2654874.svg" align="middle" width="28.32732764999999pt" height="37.783262250000035pt"/>:
-<p align="center"><img alt="$$ \mathbf{&#10;\begin{align*}&#10;X_{N + k} &amp;=  \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~(N + k)~n~/~N}\\&#10;          &amp;= \sum_{n=0}^{N-1} x_n \cdot e^{- i~2\pi~n} \cdot e^{-i~2\pi~k~n~/~N}\\&#10;          &amp;= \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N}&#10;\end{align*}}&#10;$$" src="svgs/91a732cc941dc2b4974d41e3f9df9021.svg" align="middle" width="329.86236115pt" height="182.2512848pt"/></p>
+We can exploit the symmetry of the DFT. One can notice that <p align="center"><img alt="$$X_{N+k}$$" src="svgs/6d36a8486adca625488aa0482678ca4a.svg" align="middle" width="51.663386pt" height="18.264812pt"/></p> is equivalent to <p align="center"><img alt="$$X_N$$" src="svgs/105c88dcac90d047a28d67bd03a56a45.svg" align="middle" width="30.624136pt" height="16.604352pt"/></p>:
+<p align="center"><img alt="$$ &#10;\begin{align*}&#10;X_{N + k} &amp;=  \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~(N + k)~n~/~N}\\&#10;          &amp;= \sum_{n=0}^{N-1} x_n \cdot e^{- i~2\pi~n} \cdot e^{-i~2\pi~k~n~/~N}\\&#10;          &amp;= \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N}&#10;\end{align*}&#10;$$" src="svgs/17ad18794520ec6726e0f017f5fa3fe8.svg" align="middle" width="356.607958pt" height="197.028416pt"/></p>
 
 With this property, we can confidently state the following due to the periodicity of the DFT:
-<p align="center"><img alt="$$ \mathbf{ E_{k + N/2} = E_k} $$" src="svgs/676d184bee13153b9b738d4c0ca2e563.svg" align="middle" width="111.10717790000001pt" height="19.198874500000002pt"/></p>
-<p align="center"><img alt="$$ \mathbf{O_{k + N/2} = O_k} $$" src="svgs/4e1772656c80c52b0f384dbc95a127ec.svg" align="middle" width="115.10051020000002pt" height="19.198874500000002pt"/></p>
+<p align="center"><img alt="$$ E_{k + N/2} = E_k $$" src="svgs/02a6d593b155cf4f9c117042ee320d34.svg" align="middle" width="115.76315pt" height="20.700168pt"/></p>
+<p align="center"><img alt="$$ O_{k + N/2} = O_k $$" src="svgs/732b31382a17f7e5be1b6594ee2e1470.svg" align="middle" width="116.742714pt" height="20.700168pt"/></p>
 
-Now, a factor remains outside of the <img alt="$O_k$" src="svgs/d558846fb5620bb03a65a3cc2524dfed.svg" align="middle" width="22.20540384999999pt" height="37.783262250000035pt"/>. When values of k higher than N/2 are plugged into the <img alt="$O_k$" src="svgs/d558846fb5620bb03a65a3cc2524dfed.svg" align="middle" width="22.20540384999999pt" height="37.783262250000035pt"/>, the following factor transforms accordingly:
-<p align="center"><img alt="$$ \mathbf{ \begin{matrix} e^{\frac{-2\pi i}{N} (k + N/2)} &amp; = &amp; e^{\frac{-2\pi i k}{N} - {\pi i}} \\&#10;&amp; = &amp; e^{-\pi i} e^{\frac{-2\pi i k}{N}} \\&#10;&amp; = &amp; -e^{\frac{-2\pi i k}{N}}&#10;\end{matrix}}$$" src="svgs/3ef1fd62edab1b2d8b5c5250a97406c9.svg" align="middle" width="234.44338305pt" height="71.17426375000001pt"/></p>
+Now, a factor remains outside of the <p align="center"><img alt="$$O_k$$" src="svgs/2f3eaf00cb8921a70c7c449b6630e2bc.svg" align="middle" width="24.005842pt" height="16.604352pt"/></p>. When values of k higher than N/2 are plugged into the <img alt="$O_k$" src="svgs/d558846fb5620bb03a65a3cc2524dfed.svg" align="middle" width="24.005841999999987pt" height="40.846770000000035pt"/>, the following factor transforms accordingly:
+<p align="center"><img alt="$$ \begin{matrix} e^{\frac{-2\pi i}{N} (k + N/2)} &amp; = &amp; e^{\frac{-2\pi i k}{N} - {\pi i}} \\&#10;&amp; = &amp; e^{-\pi i} e^{\frac{-2\pi i k}{N}} \\&#10;&amp; = &amp; -e^{\frac{-2\pi i k}{N}}&#10;\end{matrix}$$" src="svgs/6479e1e52b2f24a0ab43ac8e819acff6.svg" align="middle" width="253.452306pt" height="76.94515pt"/></p>
 
-Ultimately, one can rewrite the DFT for <img alt="$X_k$" src="svgs/1a35cf75b6c416e1e4a2b594e79040e6.svg" align="middle" width="23.41626954999999pt" height="37.783262250000035pt"/> for k values less than N/2 as
-<p align="center"><img alt="$$ \mathbf{ X_k =  E_k + e^{-\frac{2\pi i}{N}k} O_k}$$" src="svgs/2dfb4620bec6fc13e8fcfe190ccc5e89.svg" align="middle" width="175.62563745pt" height="21.7271585pt"/></p>
+Ultimately, one can rewrite the DFT for <p align="center"><img alt="$$X_k$$" src="svgs/7624e0a73dbed7225b01557dc2a5314b.svg" align="middle" width="25.314886pt" height="16.604352pt"/></p> for k values less than N/2 as
+<p align="center"><img alt="$$ X_k =  E_k + e^{-\frac{2\pi i}{N}k} O_k$$" src="svgs/9aca1f0eb17003e7d76209d90fa0b592.svg" align="middle" width="182.79962pt" height="23.210086pt"/></p>
 
-and the DFT for <img alt="$X_k$" src="svgs/1a35cf75b6c416e1e4a2b594e79040e6.svg" align="middle" width="23.41626954999999pt" height="37.783262250000035pt"/> for k values greater than N/2 and less than N as 
-<p align="center"><img alt="$$ \mathbf{ X_{k+\frac{N}{2}} = E_k - e^{-\frac{2\pi i}{N}{k}} O_k}$$" src="svgs/88eb36e209ef41b66e2c93254c469731.svg" align="middle" width="201.98675550000002pt" height="28.33084635pt"/></p>
+and the DFT for <p align="center"><img alt="$$X_k$$" src="svgs/7624e0a73dbed7225b01557dc2a5314b.svg" align="middle" width="25.314886pt" height="16.604352pt"/></p> for k values greater than N/2 and less than N as 
+<p align="center"><img alt="$$ X_{k+\frac{N}{2}} = E_k - e^{-\frac{2\pi i}{N}{k}} O_k$$" src="svgs/4786bfaf4cfe8d830131ca4637fa95c8.svg" align="middle" width="211.616696pt" height="30.32154pt"/></p>
 
 With the following derivations, once can observe that this pattern will continue as long as the DFT's are divided into 2. 
 
@@ -169,14 +169,14 @@ img5 = cv2.imread('8-point DFT.png', 0)
 
 ### How to recombine the divisions of the DFT to obtain the original DFT?
 
-For example, let's say we are performing the DFT on a 2-sample signal. There is only one even-indexed input and one odd-indexed input. Using the FFT radix-2 DIT algorithm, two separate DFTs can be created where each of these DFTs only contain one input. One of these halved DFTs will contain the even-index input and the other will have odd-index input. Let's call the even-indexed DFT <img alt="$Even_k$" src="svgs/3bc08d03f70ba7bedb9c7f046fe9408d.svg" align="middle" width="52.054585899999985pt" height="37.783262250000035pt"/> and the odd-indexed DFT <img alt="$Odd_k$" src="svgs/fc1e622131d66b529ac6b79921188895.svg" align="middle" width="41.90348789999999pt" height="38.39768609999998pt"/>.
+For example, let's say we are performing the DFT on a 2-sample signal. There is only one even-indexed input and one odd-indexed input. Using the FFT radix-2 DIT algorithm, two separate DFTs can be created where each of these DFTs only contain one input. One of these halved DFTs will contain the even-index input and the other will have odd-index input. Let's call the even-indexed DFT <img alt="$Even_k$" src="svgs/3bc08d03f70ba7bedb9c7f046fe9408d.svg" align="middle" width="56.275227999999984pt" height="40.846770000000035pt"/> and the odd-indexed DFT <img alt="$Odd_k$" src="svgs/fc1e622131d66b529ac6b79921188895.svg" align="middle" width="45.30106799999999pt" height="41.51101199999998pt"/>.
 
-The original 2-point DFT has two values for k for which the DFT will calculate the frequency representation of the signal. Those values are simply <img alt="$X_0$" src="svgs/07478cd102054dc58a97f6fd8df84705.svg" align="middle" width="22.616303649999992pt" height="37.783262250000035pt"/> and <img alt="$X_1$" src="svgs/4a0dab614eaf1e6dc58146666d67ace8.svg" align="middle" width="22.616303649999992pt" height="37.783262250000035pt"/>. When we recombine the single-point DFTs we observe that the original two-point DFT is comprised of 
-<p align="center"><img alt="$$ \mathbf{ X_0 = Even_0 + e^{-\frac{2\pi i}{N}\cdot0}Odd_0}$$" src="svgs/bb0fd34973576c7bf99f616a8cf22afc.svg" align="middle" width="233.8080764pt" height="21.7271585pt"/></p>
+The original 2-point DFT has two values for k for which the DFT will calculate the frequency representation of the signal. Those values are simply <p align="center"><img alt="$$X_0$$" src="svgs/941107b378c585544460c087fe33473a.svg" align="middle" width="24.450058pt" height="16.604352pt"/></p> and <p align="center"><img alt="$$X_1$$" src="svgs/7e1ccff43e4f502a27a0d5ea5e6b1d5c.svg" align="middle" width="24.450058pt" height="16.604352pt"/></p>. When we recombine the single-point DFTs we observe that the original two-point DFT is comprised of 
+<p align="center"><img alt="$$ X_0 = Even_0 + e^{-\frac{2\pi i}{N}\cdot0}Odd_0$$" src="svgs/79e920d622461180205a57a3cdb2262c.svg" align="middle" width="238.126954pt" height="23.210086pt"/></p>
 and 
-<p align="center"><img alt="$$ \mathbf{ X_1 = Even_0 - e^{-\frac{2\pi i}{N}\cdot0}Odd_0}$$" src="svgs/336a41376e0f3b982b12ef1dfa092d8b.svg" align="middle" width="233.8080764pt" height="21.7271585pt"/></p>
+<p align="center"><img alt="$$ X_1 = Even_0 - e^{-\frac{2\pi i}{N}\cdot0}Odd_0$$" src="svgs/d467230f2b64173e0d1c48ebbffe7b3f.svg" align="middle" width="238.126954pt" height="23.210086pt"/></p>
 
-These formulas can be easily obtained from the latter two derivations in the previous section (representing <img alt="$X_k$" src="svgs/1a35cf75b6c416e1e4a2b594e79040e6.svg" align="middle" width="23.41626954999999pt" height="37.783262250000035pt"/> and <img alt="$X_{k+N/2}$" src="svgs/b44e99b815e435ad109119efb4f921aa.svg" align="middle" width="61.49666214999999pt" height="37.783262250000035pt"/> through even and odd-numbered DFTs using symmetry).
+These formulas can be easily obtained from the latter two derivations in the previous section (representing <img alt="$X_k$" src="svgs/1a35cf75b6c416e1e4a2b594e79040e6.svg" align="middle" width="25.314885999999987pt" height="40.846770000000035pt"/> and <img alt="$X_{k+N/2}$" src="svgs/b44e99b815e435ad109119efb4f921aa.svg" align="middle" width="66.48287799999999pt" height="40.846770000000035pt"/> through even and odd-numbered DFTs using symmetry).
 
 To calculate a two-point DFT, one simply needs to add the inputs together for the k = 0 and subtract the inputs from each other (not forgetting the factor on the odd-numbered DFT) for k = 1. The DFT for a single point is trivial as it is the single point itself.
 
@@ -200,7 +200,7 @@ plt.imshow(img3, cmap='gray')
 
 What is the value of alpha?
 
-The value of alpha comes from evaluating the factor attached to the odd numbered DFT. The value of k in that factor depends on the <img alt="$X_k$" src="svgs/1a35cf75b6c416e1e4a2b594e79040e6.svg" align="middle" width="23.41626954999999pt" height="37.783262250000035pt"/> being evaluated. 
+The value of alpha comes from evaluating the factor attached to the odd numbered DFT. The value of k in that factor depends on the <img alt="$X_k$" src="svgs/1a35cf75b6c416e1e4a2b594e79040e6.svg" align="middle" width="25.314885999999987pt" height="40.846770000000035pt"/> being evaluated. 
 
 #### How is this process scaled for higher numbered-DFT recombinations?
 
@@ -253,7 +253,7 @@ Makhoul stated that to obtain the DCT of an input signal from an FFT algorithm, 
 
 For example, [1, 2, 3, 4] becomes [1, 2, 3, 4, 0, 0, 0, 0].
 
-Now, take the FFT of that signal, multiply every input of the FFT with <img alt="$2e^{-i\pi k/2N}$" src="svgs/59f9602c994e9e76497f21426eb6e050.svg" align="middle" width="79.71611705pt" height="49.093912500000016pt"/> where k is the index of a data point in the signal. Then, retain only the first N values of the FFT, and keep only the real parts of the FFT. This is equivalent to taking the DCT of the original input signal.
+Now, take the FFT of that signal, multiply every input of the FFT with <img alt="$2e^{-i\pi k/2N}$" src="svgs/59f9602c994e9e76497f21426eb6e050.svg" align="middle" width="86.17958599999999pt" height="53.074500000000015pt"/> where k is the index of a data point in the signal. Then, retain only the first N values of the FFT, and keep only the real parts of the FFT. This is equivalent to taking the DCT of the original input signal.
 
 Below, I implemented the FFT, butterfly computation, and the DCT from fundamental principles. At the end of the section, I prove my results by comparing it to the dct call from scipy.fftpack.
 

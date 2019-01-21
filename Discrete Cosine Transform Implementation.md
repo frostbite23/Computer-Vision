@@ -6,7 +6,7 @@ Author: Pramith Devulapalli
 The Discrete Cosine Transform (DCT) is a version of the Discrete Fourier Transform (DFT) that aims to represent an arbitrary signal in terms of purely cosine functions. Through the application of the DCT, the spectral representation of the image can be acquired and the underlying frequencies in the image can be analyzed. 
 
 The concept of the DCT lies in its basis functions. The 1-D DCT
-$$ \mathbf{ X_k = \sum_{n=0}^{N-1} x_n cos[\frac{\pi}{N} (n + \frac{1}{2}) k]} $$ where $$ \mathbf{ k = 0, \ldots, N-1} $$
+$$ X_k = \sum_{n=0}^{N-1} x_n cos[\frac{\pi}{N} (n + \frac{1}{2}) k] $$ where $$ k = 0, \ldots, N-1$$
 constructs an arbitrary signal through cosines of k varying frequencies.
 
 The DCT is used in computer vision for a different number of reasons. The first (0th) coefficient of the DCT is the mean of the values being transformed. This is crucial because the first coefficient represents the average tone of the image pixels and represents important information (a DST doesn't have this property). Additionally, the boundary conditions implied by the DCT differ from the DFT. The DFT implies a periodic extension of the signal whereas the DCT implies an even extension of the signal (symmetric). In imaging applications, the DCT is more conducive than the DFT because the DCT is able to represent most of the signal information in a smaller amount of terms than that of the DFT.  
@@ -96,7 +96,7 @@ plt.show()
 
 ## Optimization of the Discrete Cosine Transform
 
-The naive implementation is too computationally expensive and impractical to perform on large images. For example, if I had a 512x512 image, the naive implementation would execute 68,719,476,736 operations to complete the DCT. 
+The naive implementation is too computationally expensive and impractical to perform on large images. For example, if I had a 512x512 image, the naive implementation would execute approximately 68,719,476,736 operations to complete the DCT. 
 
 ### How can we optimize the DCT?
 
@@ -108,23 +108,23 @@ I decided to choose the latter option because there were more resources and info
 The FFT is an algorithm that computes the discrete Fourier Transform in $$\mathcal{O}[N\log N]$$ versus a naive implementation that runs in $$\mathcal{O}[N^2]$$.
 
 #### Discrete Fourier Transform
-$$ \mathbf{ X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N}} $$
+$$ X_k = \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N} $$
 
 
 #### Inverse Discrete Fourier Transform
-$$ \mathbf{ x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k e^{i~2\pi~k~n~/~N}} $$
+$$ x_n = \frac{1}{N}\sum_{k=0}^{N-1} X_k e^{i~2\pi~k~n~/~N} $$
 
 
 The FFT derives its fast time complexity by exploiting the symmetries apparent in the DFT. The algorithm described below to implement the FFT is called the radix-2 decimation-in-time (DIT).
 
 First, we can observe that the DFT can be split into two different summations. 
 
-$$ \mathbf{
+$$
 \begin{align}
 X_k &= \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N} \\
     &= \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~(2m)~/~N} + \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~(2m + 1)~/~N} \\
     &= \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~m~/~(N/2)} + e^{-i~2\pi~k~/~N} \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~m~/~(N/2)}
-\end{align}}
+\end{align}
 $$
 
 
@@ -139,39 +139,39 @@ Looking at the odd-numbered summation, we can factor out a $$e^{-i~2\pi~k~n~/~N}
 After the third step, one can see that the original DFT has been halved into two smaller N/2 DFTs. This can be repeated by segregating the even-indexed inputs from the odd-numbered inputs until the halved DFTs has only one number. The DFT of one input and is simply the input itself. Assuming that the input array to the FFT is $$2^n$$, one can observe that the number of stages of dividing the DFT occurs $$log(2^N)$$ (assuming log base 2) or N times.
 
 After dividing the DFT N times, now the divisions have to rejoin each other to resemble the DFT of the original signal. After the third step from the above expressions, one can notice that the original DFT can be summarized through $E_k$ (even-numbered DFT) and $O_k$ (odd-numbered DFT):
-$$ \mathbf{ X_k = E_k + e^{-\frac{2\pi i}{N}k} O_k} $$
+$$ X_k = E_k + e^{-\frac{2\pi i}{N}k} O_k $$
 where
-$$ \mathbf{ E_k = \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~m~/~(N/2)}} $$ and
-$$ \mathbf{ O_k = \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~m~/~(N/2)}} $$
+$$ E_k = \sum_{m=0}^{N/2 - 1} x_{2m} \cdot e^{-i~2\pi~k~m~/~(N/2)} $$ and
+$$ O_k = \sum_{m=0}^{N/2 - 1} x_{2m + 1} \cdot e^{-i~2\pi~k~m~/~(N/2)} $$
 
-Remember, the DFT can only calculate the spectral representation of a 1-d signal for frequencies from 0 to the length of the signal. In the case above, $X_k$ can technically only be calculate for value of k from $0 \leq k < N/2$. 
+Remember, the DFT can only calculate the spectral representation of a 1-d signal for frequencies from 0 to the length of the signal. In the case above, $$X_k$$ can technically only be calculate for value of k from $$0 \leq k < N/2$$. 
 
 How do we calculate for values of k from N/2 to N?
 
-We can exploit the symmetry of the DFT. One can notice that $X_{N+k}$ is equivalent to $X_N$:
-$$ \mathbf{
+We can exploit the symmetry of the DFT. One can notice that $$X_{N+k}$$ is equivalent to $$X_N$$:
+$$ 
 \begin{align*}
 X_{N + k} &=  \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~(N + k)~n~/~N}\\
           &= \sum_{n=0}^{N-1} x_n \cdot e^{- i~2\pi~n} \cdot e^{-i~2\pi~k~n~/~N}\\
           &= \sum_{n=0}^{N-1} x_n \cdot e^{-i~2\pi~k~n~/~N}
-\end{align*}}
+\end{align*}
 $$
 
 With this property, we can confidently state the following due to the periodicity of the DFT:
-$$ \mathbf{ E_{k + N/2} = E_k} $$
-$$ \mathbf{O_{k + N/2} = O_k} $$
+$$ E_{k + N/2} = E_k $$
+$$ O_{k + N/2} = O_k $$
 
-Now, a factor remains outside of the $O_k$. When values of k higher than N/2 are plugged into the $O_k$, the following factor transforms accordingly:
-$$ \mathbf{ \begin{matrix} e^{\frac{-2\pi i}{N} (k + N/2)} & = & e^{\frac{-2\pi i k}{N} - {\pi i}} \\
+Now, a factor remains outside of the $$O_k$$. When values of k higher than N/2 are plugged into the $O_k$, the following factor transforms accordingly:
+$$ \begin{matrix} e^{\frac{-2\pi i}{N} (k + N/2)} & = & e^{\frac{-2\pi i k}{N} - {\pi i}} \\
 & = & e^{-\pi i} e^{\frac{-2\pi i k}{N}} \\
 & = & -e^{\frac{-2\pi i k}{N}}
-\end{matrix}}$$
+\end{matrix}$$
 
-Ultimately, one can rewrite the DFT for $X_k$ for k values less than N/2 as
-$$ \mathbf{ X_k =  E_k + e^{-\frac{2\pi i}{N}k} O_k}$$
+Ultimately, one can rewrite the DFT for $$X_k$$ for k values less than N/2 as
+$$ X_k =  E_k + e^{-\frac{2\pi i}{N}k} O_k$$
 
-and the DFT for $X_k$ for k values greater than N/2 and less than N as 
-$$ \mathbf{ X_{k+\frac{N}{2}} = E_k - e^{-\frac{2\pi i}{N}{k}} O_k}$$
+and the DFT for $$X_k$$ for k values greater than N/2 and less than N as 
+$$ X_{k+\frac{N}{2}} = E_k - e^{-\frac{2\pi i}{N}{k}} O_k$$
 
 With the following derivations, once can observe that this pattern will continue as long as the DFT's are divided into 2. 
 
@@ -186,10 +186,10 @@ img5 = cv2.imread('8-point DFT.png', 0)
 
 For example, let's say we are performing the DFT on a 2-sample signal. There is only one even-indexed input and one odd-indexed input. Using the FFT radix-2 DIT algorithm, two separate DFTs can be created where each of these DFTs only contain one input. One of these halved DFTs will contain the even-index input and the other will have odd-index input. Let's call the even-indexed DFT $Even_k$ and the odd-indexed DFT $Odd_k$.
 
-The original 2-point DFT has two values for k for which the DFT will calculate the frequency representation of the signal. Those values are simply $X_0$ and $X_1$. When we recombine the single-point DFTs we observe that the original two-point DFT is comprised of 
-$$ \mathbf{ X_0 = Even_0 + e^{-\frac{2\pi i}{N}\cdot0}Odd_0}$$
+The original 2-point DFT has two values for k for which the DFT will calculate the frequency representation of the signal. Those values are simply $$X_0$$ and $$X_1$$. When we recombine the single-point DFTs we observe that the original two-point DFT is comprised of 
+$$ X_0 = Even_0 + e^{-\frac{2\pi i}{N}\cdot0}Odd_0$$
 and 
-$$ \mathbf{ X_1 = Even_0 - e^{-\frac{2\pi i}{N}\cdot0}Odd_0}$$
+$$ X_1 = Even_0 - e^{-\frac{2\pi i}{N}\cdot0}Odd_0$$
 
 These formulas can be easily obtained from the latter two derivations in the previous section (representing $X_k$ and $X_{k+N/2}$ through even and odd-numbered DFTs using symmetry).
 
