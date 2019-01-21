@@ -3,6 +3,8 @@
 
 Author: Pramith Devulapalli
 
+Alternate Version: A corresponding python notebook is in the Jupyter Notebooks folder
+
 The Discrete Cosine Transform (DCT) is a version of the Discrete Fourier Transform (DFT) that aims to represent an arbitrary signal in terms of purely cosine functions. Through the application of the DCT, the spectral representation of the image can be acquired and the underlying frequencies in the image can be analyzed. 
 
 The concept of the DCT lies in its basis functions. The 1-D DCT

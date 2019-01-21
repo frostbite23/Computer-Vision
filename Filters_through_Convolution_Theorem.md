@@ -3,6 +3,8 @@
 
 Author: Pramith Devulapalli
 
+Alternate Version: A corresponding python notebook is in the Jupyter Notebooks folder
+
 An alternative way to convolve kernels with an image is through Fourier Transforms. The convolution theorems states that the Fourier Transform of the image and kernel, point-wise multiplication of those transforms, and the inverse Fourier Transform of the product is equivalent to applying convolving a kernel with an image.
 
 Convolution Theorem:
