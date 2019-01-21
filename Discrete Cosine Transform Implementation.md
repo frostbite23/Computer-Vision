@@ -46,7 +46,7 @@ plt.imshow(img2, cmap='gray')
 
 
 
-![png](output_6_1.png)
+![png](images/DCToutput_6_1.png)
 
 
 A naive implementation of the 2-D DCT requires four for loops and has a run time complexity of $$O(N^4)$$ and this can be computationally very expensive when the size of the images scale upwards. Ideally, implementing an algorithm with a much better time complexity is preferred to effectively compute the 2-D DCT in a much shorter time. Below, I have performed the naive implementation of the 2-D DCT to see the different basis functions of the discrete cosine transform.
@@ -91,7 +91,7 @@ plt.show()
 ```
 
 
-![png](output_10_0.png)
+![png](images/DCToutput_10_0.png)
 
 
 ## Optimization of the Discrete Cosine Transform
@@ -210,7 +210,7 @@ plt.imshow(img3, cmap='gray')
 
 
 
-![png](output_14_1.png)
+![png](images/DCToutput_14_1.png)
 
 
 What is the value of alpha?
@@ -234,7 +234,7 @@ plt.imshow(img4, cmap='gray')
 
 
 
-![png](output_16_1.png)
+![png](images/DCToutput_16_1.png)
 
 
 
@@ -251,7 +251,7 @@ plt.imshow(img5, cmap='gray')
 
 
 
-![png](output_17_1.png)
+![png](images/DCToutput_17_1.png)
 
 
 #### Bit Reversal
